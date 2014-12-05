@@ -1,0 +1,7 @@
+CS456/CS556/MA456 Cryptography Assignment 3 (Fall 2014)
+Submit this plaintext by email along with all the ElGamal keys.
+Write a simple socket-based chat program that uses RSA/ElGamal with DES/AES (your choice). 
+Allow the user to specify the bit-length for the prime(s) used and the secret key for DES/AES. 
+Implement a system that encrypts single ASCII characters. Arrange an online demonstration of 
+your program. You may work in groups of at most three.
+
