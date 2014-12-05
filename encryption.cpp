@@ -36,9 +36,22 @@ SecByteBlock their_key(0x00, AES_KEYLENGTH);
 byte their_iv[AES::BLOCKSIZE];
 
 //These will return the ZZ values of the keys to the buffer passed into them
-string getN(){ return to_string(conv<long>(N)); }
-string getE(){ return to_string(conv<long>(e)); }
-
+//string getN(){ return to_string(conv<long>(N)); }
+//string getE(){ return to_string(conv<long>(e)); }
+string getN(){
+    stringstream ss;
+    ss << N;
+    string ret;
+    ss >> ret;
+    return ret;
+}
+string getE(){
+    stringstream ss;
+    ss << e;
+    string ret;
+    ss >> ret;
+    return ret;
+}
 
 void rsa_genkeys(long bitlength){
     //generate the p and q primes
@@ -93,6 +106,8 @@ pair<unsigned int*, int> rsa_encrypt(pair<unsigned int*, int> message, ZZ N, ZZ 
     unsigned int * encrypted = new unsigned int[msgsize];
     for(int i = 0; i < msgsize; i++){
         //cout << conv<ZZ>(to_encrypt[i]) << "^" << e << " (mod " << N << ")" << endl;
+        ZZ tmp(PowerMod(conv<ZZ>(to_encrypt[i])%N, e, N)); ZZ biggest(2147483647);
+        if(tmp > biggest){ cout << "DATA LOSS DETECTED! RSA KEY TOO LARGE. ABORTING.\n", exit(1);}
         encrypted[i] = conv<unsigned int>(PowerMod(conv<ZZ>(to_encrypt[i])%N, e, N));
         //cout << "encresult: " << (unsigned int)encrypted[i] << endl;
     }

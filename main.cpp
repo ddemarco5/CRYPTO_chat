@@ -95,7 +95,7 @@ int main() {
     }*/
     cout << "\nWelcome to RSA key exchange + AES encrypted chat!\n\n\n";
 
-    cout << "RSA Keylength?(15 is the largest for this program): ";
+    cout << "RSA Keylength?(14-15 max, as this is a program that preserves data size): ";
     cin >> rsa_keylength;
 
     cout << "AES Keylength?(16, 24, or 32): ";
