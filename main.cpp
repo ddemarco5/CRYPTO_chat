@@ -11,7 +11,7 @@
 using namespace std;
 
 
-const int BUFMAX = 500;     // Longest string to echo
+const int BUFMAX = 65507;     // Longest string to echo
 unsigned short listenPort;
 unsigned short sendPort;
 
