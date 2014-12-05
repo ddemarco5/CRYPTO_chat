@@ -24,15 +24,17 @@ using namespace NTL;
 using namespace CryptoPP;
 
 //AES Keylength
-int AES_KEYLENGTH = 16;
+int AES_KEYLENGTH;
 
 //GLOBAL KEYS. BE CAREFUL! EVERYTHING BUT N AND e ARE PRIVATE
 ZZ p,q,phi,e,N,d;
 //OUR AES KEYS
-SecByteBlock key(0x00, AES_KEYLENGTH);
+//SecByteBlock key(0x00, AES_KEYLENGTH);
+SecByteBlock key;
 byte iv[AES::BLOCKSIZE];
 //THEIR AES KEYS
-SecByteBlock their_key(0x00, AES_KEYLENGTH);
+//SecByteBlock their_key(0x00, AES_KEYLENGTH);
+SecByteBlock their_key;
 byte their_iv[AES::BLOCKSIZE];
 
 //These will return the ZZ values of the keys to the buffer passed into them
@@ -152,7 +154,8 @@ void aes_genkeys(int length){
     AutoSeededRandomPool rnd;
 
     // Generate a random key
-    //SecByteBlock key(0x00, AES_KEYLENGTH);
+    key.New(AES_KEYLENGTH);
+    their_key.New(AES_KEYLENGTH);
     rnd.GenerateBlock( key, key.size() );
     their_key = key;
 
