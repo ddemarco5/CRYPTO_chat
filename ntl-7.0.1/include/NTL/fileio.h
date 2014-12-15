@@ -3,8 +3,25 @@
 #define NTL_fileio__H
 
 #include <NTL/tools.h>
+
+#if (defined(NTL_STD_CXX) || defined(NTL_PSTD_NHF))
+
 #include <fstream>                                                              
 
+#else
+
+#include <fstream.h>
+
+#endif
+
+#if 0
+namespace foo_bar {
+
+class ofstream;
+class ifstream;
+
+}
+#endif
 
 NTL_OPEN_NNS
 
@@ -17,10 +34,13 @@ void OpenRead(NTL_SNS ifstream& s, const char *name);
 
 // opens file for reading
 
+char *FileName(const char* stem, const char *ext);
 
-const char *FileName(const char* stem, long d);
+// builds the name "stem-ext", returns a pointer to buffer
 
-// builds the name from stem-DDDDD, returns pointer to buffer
+char *FileName(const char* stem, const char *ext, long d);
+
+// builds the name stem-ext-DDDDD, returns pointer to buffer
 
 NTL_CLOSE_NNS
 

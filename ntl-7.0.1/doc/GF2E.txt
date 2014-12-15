@@ -28,8 +28,6 @@ BuildSparseIrred and BuildIrred in GF2XFactoring.
 \**************************************************************************/
 
 #include <NTL/GF2X.h>
-#include <NTL/SmartPtr.h>
-
 
 class GF2E {
 public:

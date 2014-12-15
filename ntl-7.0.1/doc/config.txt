@@ -18,13 +18,13 @@ correct for your platform, you have to set an appropriate variable.
 ########### Here are the most important variables, and their default values.
 
 CXX=g++              # The C++ compiler
-CXXFLAGS=-g -O2      # C++ complilation flags
+CXXFLAGS=-O2         # C++ complilation flags
 
 DEF_PREFIX=/usr/local # Default software directory
 PREFIX=$(DEF_PREFIX) # Directory in which to install NTL library components
 SHARED=off           # Generate a shared library (as well as static)
 
-NTL_THREADS=off      # compile in thread-safe mode
+NTL_STD_CXX=on       # ISO Mode switch
 
 NTL_GMP_LIP=off      # Switch to enable the use of GMP as primary 
                      #   long integer package
@@ -50,13 +50,12 @@ CXX=g++
 
 
 
-CXXFLAGS=-g -O2
+CXXFLAGS=-O2
 
-# Flags for the C++ compiler
-# 
-# Note that if the NTL_THREADS option is on and CXXFLAGS has
-# not been explicitly set, then then CXXFLAGS is set to
-#   -g -O2 -std=c++11 -pthread
+# Flags for the C compiler
+# Some useful flags:
+#   -O2   --  recommended level of optimization
+#   -g    --  debugging
 
 
 ########## Installation path:
@@ -99,15 +98,25 @@ SHARED=off
 # features specific to GNU make.
 
 
-########## thread safety
 
-NTL_THREADS=off
+########## ISO mode switch:
 
-# Set to 'on' if you want to compile NTL in thread-safe mode.
-# This requires several C++11 features, including atomic types,
-# mutexes, and thread_local storage.  Your compiler may not
-# yet support these feautures.
+NTL_STD_CXX=on
 
+# Set to 'off' if you do not want to use the "Standard C++" version of NTL.
+# In this version, all of NTL is "wrapped" inside the namespace NTL,
+# and are no longer directly accessible---you must either use
+# explicit qualification, or using directives, or using declarations.
+# However, note that all names that begin with "NTL_" are macros,
+# and as such do not belong to any namespace.
+# Additionally, instead of including the traditional headers
+# <stdlib.h>, <math.h>, and <iostream.h>, the standard headers
+# <cstdlib>, <cmath>, and <iostream> are included.
+# These "wrap" some (but not all) names in namespace std.
+
+# If your compiler is not yet up to date, but you want some
+# of the benefits of Standard C++, you might try the "partial Standard C++"
+# switches NTL_PSTD_NNS, NTL_PSTD_NHF, NTL_PSTD_NTN (see below).
 
 ########## GMP variables:
 
@@ -230,8 +239,9 @@ INCLUDEDIR=$(PREFIX)/include
 DOCDIR=$(PREFIX)/share/doc
 
 
-NTL_LEGACY_NO_NAMESPACE=off
-NTL_LEGACY_INPUT_ERROR=off
+NTL_PSTD_NNS=off
+NTL_PSTD_NHF=off
+NTL_PSTD_NTN=off
 
 NTL_LONG_LONG_TYPE=undefined
 NTL_UNSIGNED_LONG_LONG_TYPE=undefined
@@ -340,19 +350,27 @@ DOCDIR=$(PREFIX)/share/doc
 
 
 
-########## Legacy switches
+########## Partial ISO modes
 
-NTL_LEGACY_NO_NAMESPACE=off 
+NTL_PSTD_NNS=off 
 
-# put NTL components in the global namespace
+# NTL namespace --  wraps NTL in a namespace
 
 
 
-NTL_LEGACY_INPUT_ERROR=off
+NTL_PSTD_NHF=off
  
-# abort on input errors, instead of just setting the
-# "fail bit" of the istream object
+# new header files -- use <cstdlib>, etc., instead of <stdlib.h>, etc.  
 
+
+
+NTL_PSTD_NTN=off 
+
+# nothrow new -- use the nothrow version of new.  
+
+# Any combination of these PSTD swtiches may be set -- setting them all
+# is equvalent to setting NTL_STD_CXX.  Make sure you also unset NTL_STD_CXX;
+# otherwise, they have no effect.
 
 
 ########### Basic Configuration Options:

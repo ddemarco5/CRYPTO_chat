@@ -60,7 +60,13 @@ void queueMsg(pair<unsigned int *, int> queuepair){
 
 pair<unsigned int*, int> getMsg(){
     //if there is no message, wait for one.
-    while(messageQueue.empty()) _sleep(1);
+    while(messageQueue.empty()){
+		#ifdef WIN32
+		_sleep(1);
+		#else
+		this_thread::sleep_for(chrono::milliseconds(1));
+		#endif
+	}
     mqmutex.lock();
     pair<unsigned int*, int> tmp = messageQueue.front();
     //string tmp = messageQueue.front();
@@ -138,14 +144,26 @@ int main() {
     //INITIALIZATION.
     //initial message sending.
     queueMsg(strtoPair("Hello."));
-    while(messageQueue.empty()) _sleep(1);
+    while(messageQueue.empty()){
+	#ifdef WIN32
+	_sleep(1);
+	#else
+	this_thread::sleep_for(chrono::milliseconds(1));
+	#endif
+    }
     queueMsg(strtoPair("N"));
     queueMsg(strtoPair(getN()));
     queueMsg(strtoPair("e"));
     queueMsg(strtoPair(getE()));
 
     //Wait for all the initial packets to come.
-    for(int i=0; i<4; i=messageQueue.size()){_sleep(1);}
+    for(int i=0; i<4; i=messageQueue.size()){
+	#ifdef WIN32
+	_sleep(1);
+	#else
+	this_thread::sleep_for(chrono::milliseconds(1));
+	#endif
+    }
     cout << "Packets Received.\n";
 
     //Do something about this fugly thing below Dom

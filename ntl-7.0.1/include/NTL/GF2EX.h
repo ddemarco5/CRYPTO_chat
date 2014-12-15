@@ -8,7 +8,6 @@
 #include <NTL/vec_GF2E.h>
 #include <NTL/FFT.h>
 #include <NTL/GF2XVec.h>
-#include <NTL/Lazy.h>
 
 
 NTL_OPEN_NNS
@@ -678,7 +677,7 @@ public:
    GF2E hlc;
    GF2EX f0;
 
-   Lazy<vec_GF2E> tracevec;
+   vec_GF2E tracevec;
 
 }; 
 

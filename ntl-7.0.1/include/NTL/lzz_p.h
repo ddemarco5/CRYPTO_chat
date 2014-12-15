@@ -4,7 +4,6 @@
 
 #include <NTL/ZZ.h>
 #include <NTL/FFT.h>
-#include <NTL/SmartPtr.h>
 
 #define NTL_zz_p_QUICK_CRT (NTL_DOUBLE_PRECISION - NTL_SP_NBITS > 12)
 
@@ -23,6 +22,8 @@ public:
    zz_pInfoT(INIT_FFT_TYPE, FFTPrimeInfo *info);
    zz_pInfoT(INIT_USER_FFT_TYPE, long q);
    ~zz_pInfoT();
+
+   long ref_count;
 
    long p;
    double pinv;
@@ -53,33 +54,41 @@ public:
    long *u;            // u, as above
 };
 
-NTL_THREAD_LOCAL extern SmartPtr<zz_pInfoT> zz_pInfo;  // current modulus, initially null
+NTL_THREAD_LOCAL extern zz_pInfoT *zz_pInfo;  // current modulus, initially null
+
+// FIXME: in a thread-safe impl, we have to use a thread-safe
+// reference counted pointer, like shared_ptr
+
 
 
 class zz_pContext {
 private:
-SmartPtr<zz_pInfoT> ptr;
+zz_pInfoT *ptr;
 
 public:
+void save();
+void restore() const;
 
-zz_pContext() { }
-
-// copy constructor, assignment, destructor: default
+zz_pContext() { ptr = 0; }
 
 explicit zz_pContext(long p, long maxroot=NTL_FFTMaxRoot);
 zz_pContext(INIT_FFT_TYPE, long index);
 zz_pContext(INIT_USER_FFT_TYPE, long q);
 
-void save();
-void restore() const;
+zz_pContext(const zz_pContext&); 
+
+zz_pContext& operator=(const zz_pContext&); 
+
+~zz_pContext();
+
 
 };
 
 
 class zz_pBak {
 private:
-zz_pContext c;
-bool MustRestore;
+long MustRestore;
+zz_pInfoT *ptr;
 
 zz_pBak(const zz_pBak&); // disabled
 void operator=(const zz_pBak&); // disabled
@@ -88,7 +97,7 @@ public:
 void save();
 void restore();
 
-zz_pBak() : MustRestore(false) { }
+zz_pBak() { MustRestore = 0; ptr = 0; }
 
 ~zz_pBak();
 
